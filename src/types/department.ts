@@ -2,6 +2,7 @@ export type Faculty = {
   id: string
   name: string
   title: string
+  image: string
   email: string
   phone: string
   bio: string
@@ -12,6 +13,8 @@ export type Lab = {
   name: string
   description: string
   focus: string
+  image: string
+  details: string[]
 }
 
 export type ResearchHighlight = {

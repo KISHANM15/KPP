@@ -28,10 +28,111 @@ const offerings = [
   { name: 'Micro-credentials', detail: 'Short industry-backed modules with transcript-visible credits (demo roadmap).', tag: 'CE' },
 ]
 
+const academicEvents = [
+  {
+    id: 'mid-sem',
+    title: 'Mid-semester assessment window',
+    examDate: '15 Sep 2026 - 22 Sep 2026',
+    resultDate: '30 Sep 2026',
+    timetable: 'Theory exams: 9:30 AM and 2:00 PM slots, published department-wise on ERP.',
+  },
+  {
+    id: 'practical',
+    title: 'Practical and viva assessments',
+    examDate: '12 Nov 2026 - 20 Nov 2026',
+    resultDate: '28 Nov 2026',
+    timetable: 'Lab batches in two sessions: 10:00 AM and 1:30 PM with external examiner schedule.',
+  },
+  {
+    id: 'end-sem',
+    title: 'End-semester examinations',
+    examDate: '02 Dec 2026 - 16 Dec 2026',
+    resultDate: '05 Jan 2027',
+    timetable: 'Final timetable released 14 days before exams; hall and seat numbers in student portal.',
+  },
+] as const
+
+const branchSyllabus = [
+  {
+    id: 'cse',
+    branch: 'Computer Science & Engineering',
+    image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=85',
+    overview: 'Strong core in programming, systems, and modern software engineering practice.',
+    semesters: [
+      'Sem 1-2: Engineering Mathematics, Programming Fundamentals, Digital Logic, Data Structures',
+      'Sem 3-4: OOP, DBMS, Operating Systems, Computer Networks, Discrete Mathematics',
+      'Sem 5-6: Software Engineering, Cloud Computing, AI/ML basics, Compiler Design',
+      'Sem 7-8: Security electives, DevOps project, internship, and capstone',
+    ],
+  },
+  {
+    id: 'mech',
+    branch: 'Mechanical Engineering',
+    image: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&w=1400&q=85',
+    overview: 'Design, manufacturing, thermal engineering, and product development.',
+    semesters: [
+      'Sem 1-2: Engineering Mechanics, Workshop Practice, Engineering Graphics',
+      'Sem 3-4: Thermodynamics, Strength of Materials, Manufacturing Processes',
+      'Sem 5-6: Heat Transfer, CAD/CAM, Fluid Machinery, Mechatronics',
+      'Sem 7-8: Design project, industrial internship, and major project',
+    ],
+  },
+  {
+    id: 'ece',
+    branch: 'Electronics & Communication Engineering',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=85',
+    overview: 'Communication systems, embedded electronics, and VLSI foundations.',
+    semesters: [
+      'Sem 1-2: Circuit Theory, Basic Electronics, Signals and Systems',
+      'Sem 3-4: Analog Circuits, Digital Electronics, Microprocessors, EM Theory',
+      'Sem 5-6: Communication Engineering, VLSI Design, DSP, Embedded Systems',
+      'Sem 7-8: Wireless electives, mini projects, industry-linked capstone',
+    ],
+  },
+  {
+    id: 'eee',
+    branch: 'Electrical & Electronics Engineering',
+    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1400&q=85',
+    overview: 'Power systems, drives, control engineering, and renewable integration.',
+    semesters: [
+      'Sem 1-2: Basic Electrical Engineering, Networks, Mathematics',
+      'Sem 3-4: Electrical Machines, Power Systems, Control Systems, Measurements',
+      'Sem 5-6: Power Electronics, Protection Systems, Embedded Energy Applications',
+      'Sem 7-8: Renewable energy electives, plant internship, final project',
+    ],
+  },
+  {
+    id: 'civil',
+    branch: 'Civil Engineering',
+    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=85',
+    overview: 'Infrastructure design, surveying, construction planning, and sustainability.',
+    semesters: [
+      'Sem 1-2: Engineering Drawing, Surveying basics, Building Materials',
+      'Sem 3-4: Structural Analysis, Geotechnical Engineering, Fluid Mechanics',
+      'Sem 5-6: RCC Design, Transportation, Environmental Engineering',
+      'Sem 7-8: Estimation & costing, field internship, and major civil design project',
+    ],
+  },
+  {
+    id: 'aids',
+    branch: 'Artificial Intelligence & Data Science',
+    image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1400&q=85',
+    overview: 'Data engineering, machine learning, and responsible AI deployment.',
+    semesters: [
+      'Sem 1-2: Python, Statistics, Calculus, Data Structures',
+      'Sem 3-4: Probability, DBMS, Data Mining, ML Foundations',
+      'Sem 5-6: Deep Learning, NLP, MLOps, Big Data Platforms',
+      'Sem 7-8: Domain electives, AI product internship, capstone deployment',
+    ],
+  },
+] as const
+
 export default function Academics() {
   const [activePillar, setActivePillar] = useState<(typeof creditPillars)[number]['id']>('design')
+  const [activeBranch, setActiveBranch] = useState<(typeof branchSyllabus)[number]['id']>('cse')
 
   const pillar = creditPillars.find((p) => p.id === activePillar)!
+  const syllabusPanel = branchSyllabus.find((item) => item.id === activeBranch) ?? branchSyllabus[0]
 
   return (
     <div>
@@ -144,6 +245,102 @@ export default function Academics() {
               <span>Industry co-badge on capstones stored in verified portfolios.</span>
             </li>
           </ul>
+        </div>
+      </section>
+
+      <section className="border-b border-[#e2ddd4] bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+          <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a] md:text-3xl">Academic events and assessment calendar</h2>
+          <p className="mt-2 max-w-3xl text-[#5c5349]">
+            Semester-level list for exam date, result date, and assessment timetable so students can plan early.
+          </p>
+          <div className="mt-8 grid gap-5">
+            {academicEvents.map((event, i) => {
+              const t = getHighlightTheme(i + 1)
+              return (
+                <article key={event.id} className={`rounded-2xl p-5 shadow-sm ${t.card}`}>
+                  <h3 className={`font-serif text-xl font-semibold ${t.title}`}>{event.title}</h3>
+                  <div className="mt-4 grid gap-3 text-sm md:grid-cols-3">
+                    <p>
+                      <span className={`block text-xs font-bold uppercase tracking-wide ${t.value}`}>Exam date</span>
+                      <span className="mt-1 block text-[#1a1410]">{event.examDate}</span>
+                    </p>
+                    <p>
+                      <span className={`block text-xs font-bold uppercase tracking-wide ${t.value}`}>Result date</span>
+                      <span className="mt-1 block text-[#1a1410]">{event.resultDate}</span>
+                    </p>
+                    <p>
+                      <span className={`block text-xs font-bold uppercase tracking-wide ${t.value}`}>Timetable</span>
+                      <span className="mt-1 block text-[#5c5349]">{event.timetable}</span>
+                    </p>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-[#e2ddd4] bg-[#faf7f2]">
+        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+          <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a] md:text-3xl">Branch syllabus explorer</h2>
+          <p className="mt-2 max-w-3xl text-[#5c5349]">
+            Click a branch to display the related syllabus flow and department image for quick review.
+          </p>
+          <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {branchSyllabus.map((item, i) => {
+                const t = getHighlightTheme(i)
+                const isActive = item.id === activeBranch
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setActiveBranch(item.id)}
+                    aria-pressed={isActive}
+                    className={[
+                      `rounded-xl border p-4 text-left transition-all ${t.card}`,
+                      isActive ? 'ring-2 ring-[#5c1a2a]/60 shadow-md' : 'hover:-translate-y-0.5 hover:shadow-md',
+                    ].join(' ')}
+                  >
+                    <p className={`text-xs font-bold uppercase tracking-wide ${t.value}`}>Syllabus</p>
+                    <p className={`mt-1 font-serif text-lg font-semibold ${t.title}`}>{item.branch}</p>
+                    <p className={`mt-1 text-sm ${t.hint}`}>{item.overview}</p>
+                  </button>
+                )
+              })}
+            </div>
+            <article className="overflow-hidden rounded-2xl border border-[#e2ddd4] bg-white shadow-sm">
+              <div
+                className="h-52 w-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(26,20,16,0.08), rgba(26,20,16,0.48)), url(${syllabusPanel.image})`,
+                }}
+                aria-label={`${syllabusPanel.branch} department`}
+              />
+              <div className="p-5">
+                <div className="inline-flex rounded-full bg-[#fef3c7] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#9a7212]">
+                  Selected branch syllabus
+                </div>
+                <h3 className="mt-3 bg-gradient-to-r from-[#5c1a2a] via-[#7f1d1d] to-[#b45309] bg-clip-text font-serif text-2xl font-bold text-transparent">
+                  {syllabusPanel.branch}
+                </h3>
+                <p className="mt-2 rounded-xl bg-gradient-to-r from-[#fff7ed] to-[#faf5ff] p-3 text-sm font-medium text-[#7c2d12]">
+                  {syllabusPanel.overview}
+                </p>
+                <ul className="mt-4 space-y-2.5 text-sm text-[#5c5349]">
+                  {syllabusPanel.semesters.map((line) => (
+                    <li key={line} className="flex gap-2 rounded-lg border border-[#f1e8d2] bg-[#fffcf5] p-2.5">
+                      <span className="mt-1 text-[#b7791f]" aria-hidden>
+                        ●
+                      </span>
+                      <span className="font-medium text-[#1d4ed8]">{line}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 

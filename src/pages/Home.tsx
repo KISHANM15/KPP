@@ -50,9 +50,9 @@ const journey = [
 ] as const
 
 const badges = [
-  { label: 'NAAC mindset', detail: 'PO → PSO mapping, IQAC rhythm (demo copy).' },
-  { label: 'NEP-ready mixes', detail: 'Minors, ABC credits, multidisciplinary baskets.' },
-  { label: 'Digital campus', detail: 'LMS, fee ledger, mentor slots — one login ladder.' },
+  { label: 'NAAC Grade A+', detail: 'Latest institutional accreditation status (illustrative).' },
+  { label: 'NBA Accredited Programs', detail: 'Core engineering programs aligned to outcome standards.' },
+  { label: 'Affiliated Colleges Grade A / B+', detail: 'Partner and affiliated institutes quality benchmark overview.' },
 ]
 
 const quotes = [
@@ -148,11 +148,58 @@ const HOME_THEMES: HomeTheme[] = [
   },
 ]
 
+type HomeChatMessage = {
+  id: string
+  role: 'assistant' | 'user'
+  text: string
+}
+
+function getHomeAssistantReply(rawQuery: string): string {
+  const query = rawQuery.trim().toLowerCase()
+  if (!query) return 'Please type your question.'
+
+  if (query.includes('fee') || query.includes('fees') || query.includes('tuition')) {
+    return 'Fees information is available in Admissions page under Fees Structure.'
+  }
+  if (query.includes('hostel') || query.includes('canteen') || query.includes('mess')) {
+    return 'Hostel and canteen details are in Campus Life section.'
+  }
+  if (query.includes('syllabus') || query.includes('exam') || query.includes('result') || query.includes('timetable')) {
+    return 'Academics page contains branch syllabus, exam dates, result dates, and timetable details.'
+  }
+  if (query.includes('placement') || query.includes('ctc') || query.includes('recruiter')) {
+    return 'Placements page has student offers, CTC highlights, recruiter strip, and skill badges.'
+  }
+  if (query.includes('faculty') || query.includes('lab') || query.includes('department')) {
+    return 'Departments page has detailed faculty profiles with images and lab sections with images and details.'
+  }
+  if (query.includes('library') || query.includes('book')) {
+    return 'Library page shows requirements, department-wise books, and institute library needs.'
+  }
+  if (query.includes('event') || query.includes('sports') || query.includes('cultural')) {
+    return 'Events and Campus Life pages include sports, cultural, technical, and outreach event information.'
+  }
+  if (query.includes('contact') || query.includes('phone') || query.includes('email')) {
+    return 'You can use Contact page for desk details, map, and support form.'
+  }
+
+  return 'Try asking about admissions, fees, syllabus, departments, labs, placements, hostel, events, library, or contact.'
+}
+
 export default function Home() {
   const [quoteIdx, setQuoteIdx] = useState(0)
   const [appTheme, setAppTheme] = useState<HomeTheme['id']>(() =>
     typeof document !== 'undefined' && document.body.classList.contains('theme-night') ? 'night' : 'light',
   )
+  const [chatOpen, setChatOpen] = useState(false)
+  const [chatInput, setChatInput] = useState('')
+  const [chatMessages, setChatMessages] = useState<HomeChatMessage[]>([
+    {
+      id: 'home-ai-welcome',
+      role: 'assistant',
+      text: 'Hi, ask any simple question about this KPPIT application.',
+    },
+  ])
 
   useEffect(() => {
     const t = window.setInterval(() => {
@@ -174,6 +221,19 @@ export default function Home() {
 
   const q = quotes[quoteIdx]
   const theme = HOME_THEMES.find((x) => x.id === appTheme) ?? HOME_THEMES[0]
+
+  function sendChatMessage() {
+    const text = chatInput.trim()
+    if (!text) return
+    const userMessage: HomeChatMessage = { id: `u-${Date.now()}`, role: 'user', text }
+    const assistantMessage: HomeChatMessage = {
+      id: `a-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      role: 'assistant',
+      text: getHomeAssistantReply(text),
+    }
+    setChatMessages((prev) => [...prev, userMessage, assistantMessage])
+    setChatInput('')
+  }
 
   return (
     <div>
@@ -454,6 +514,68 @@ export default function Home() {
       </section>
         </div>
       </div>
+      {chatOpen ? (
+        <section className="fixed bottom-24 right-5 z-50 w-[min(92vw,380px)] overflow-hidden rounded-2xl border border-[#e2ddd4] bg-white shadow-2xl md:bottom-28 md:right-8">
+          <header className="flex items-center justify-between border-b border-[#e2ddd4] bg-[#5c1a2a] px-4 py-3 text-[#fffbeb]">
+            <p className="font-semibold">KPPIT AI Chat</p>
+            <button
+              type="button"
+              onClick={() => setChatOpen(false)}
+              className="rounded-md bg-white/10 px-2 py-1 text-xs font-semibold hover:bg-white/20"
+            >
+              Close
+            </button>
+          </header>
+          <div className="max-h-72 space-y-2 overflow-y-auto bg-[#fffdf8] p-3">
+            {chatMessages.map((m) => (
+              <article key={m.id} className={m.role === 'user' ? 'ml-auto max-w-[85%]' : 'mr-auto max-w-[85%]'}>
+                <p
+                  className={[
+                    'rounded-xl px-3 py-2 text-sm leading-relaxed',
+                    m.role === 'user' ? 'bg-[#5c1a2a] text-[#faf7f2]' : 'border border-[#e2ddd4] bg-white text-[#1a1410]',
+                  ].join(' ')}
+                >
+                  {m.text}
+                </p>
+              </article>
+            ))}
+          </div>
+          <div className="border-t border-[#e2ddd4] p-3">
+            <div className="flex gap-2">
+              <input
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Ask here..."
+                className="w-full rounded-lg border border-[#e2ddd4] px-3 py-2 text-sm outline-none ring-[#5c1a2a] focus:ring-2"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    sendChatMessage()
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={sendChatMessage}
+                className="rounded-lg bg-[#5c1a2a] px-3 py-2 text-sm font-semibold text-[#faf7f2] hover:bg-[#3d111c]"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : null}
+      <button
+        type="button"
+        onClick={() => setChatOpen((v) => !v)}
+        aria-label="Open AI chat"
+        className="fixed bottom-6 right-5 z-40 inline-flex items-center gap-2 rounded-full border border-[#fcd34d]/70 bg-[#5c1a2a] px-4 py-3 text-sm font-bold text-[#fffbeb] shadow-xl shadow-[#5c1a2a]/40 transition-transform hover:-translate-y-0.5 hover:bg-[#3d111c] md:bottom-8 md:right-8"
+      >
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-base" aria-hidden>
+          🤖
+        </span>
+        <span>AI Chat</span>
+      </button>
     </div>
   )
 }

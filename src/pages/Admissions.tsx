@@ -40,6 +40,12 @@ const deadlinesFile = {
   downloadName: 'KPPIT-Key-Dates-Admissions-2026.txt',
 }
 
+const feesStructure = [
+  { programme: 'B.Tech (per year)', tuition: 'INR 1,35,000', hostel: 'INR 72,000', examAndServices: 'INR 12,000' },
+  { programme: 'M.Tech (per year)', tuition: 'INR 1,10,000', hostel: 'INR 72,000', examAndServices: 'INR 10,000' },
+  { programme: 'MBA (per year)', tuition: 'INR 1,50,000', hostel: 'INR 78,000', examAndServices: 'INR 12,000' },
+] as const
+
 /** Three fixed demo answers — always visible for juries & families */
 const demoEligibilityExamples = [
   {
@@ -295,6 +301,36 @@ export default function Admissions() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="border-b border-[#fcd34d]/40 bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+          <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a] md:text-3xl">Fees structure (illustrative)</h2>
+          <p className="mt-2 max-w-3xl text-sm text-[#57534e]">
+            Use this as a clear preview for applicants. Final fee notifications are published by the institute finance office each cycle.
+          </p>
+          <div className="mt-6 overflow-hidden rounded-2xl border border-[#fcd34d]/50">
+            <div className="grid grid-cols-4 bg-[#5c1a2a] px-4 py-3 text-xs font-bold uppercase tracking-wide text-[#fffbeb] md:text-sm">
+              <span>Programme</span>
+              <span>Tuition</span>
+              <span>Hostel + Mess</span>
+              <span>Exam & services</span>
+            </div>
+            <div className="divide-y divide-[#f5e7c0] bg-[#fffdf8]">
+              {feesStructure.map((row) => (
+                <div key={row.programme} className="grid grid-cols-4 gap-2 px-4 py-4 text-sm text-[#44403c]">
+                  <p className="font-semibold text-[#5c1a2a]">{row.programme}</p>
+                  <p>{row.tuition}</p>
+                  <p>{row.hostel}</p>
+                  <p>{row.examAndServices}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-[#78716c]">
+            Note: Scholarship, installment plans, and refunds follow separate policy circulars and may vary by category.
+          </p>
         </div>
       </section>
 

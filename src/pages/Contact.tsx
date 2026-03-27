@@ -2,6 +2,7 @@ import { useMemo, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import PageHero from '../components/PageHero'
 import { departments } from '../data/departments'
+import { firebaseWebConfig } from '../lib/firebaseConfig'
 import { campusImages } from '../lib/images'
 
 const desks = [
@@ -52,13 +53,81 @@ const social = [
 export default function Contact() {
   const [sent, setSent] = useState(false)
   const [message, setMessage] = useState('')
+  const [sending, setSending] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const maxLen = 600
 
   const deptSample = useMemo(() => departments.slice(0, 6), [])
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setSent(true)
+    setSubmitError('')
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const payload = {
+      name: String(formData.get('name') ?? '').trim(),
+      email: String(formData.get('email') ?? '').trim(),
+      phone: String(formData.get('phone') ?? '').trim(),
+      topic: String(formData.get('topic') ?? 'Other').trim(),
+      message: String(formData.get('message') ?? '').trim(),
+      source: 'kppit-contact-form',
+      createdAt: new Date().toISOString(),
+    }
+
+    try {
+      setSending(true)
+      const url = `https://firestore.googleapis.com/v1/projects/${firebaseWebConfig.projectId}/databases/(default)/documents/contacts?key=${firebaseWebConfig.apiKey}`
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          fields: {
+            name: { stringValue: payload.name },
+            email: { stringValue: payload.email },
+            phone: { stringValue: payload.phone },
+            topic: { stringValue: payload.topic },
+            message: { stringValue: payload.message },
+            source: { stringValue: payload.source },
+            createdAt: { stringValue: payload.createdAt },
+          },
+        }),
+      })
+
+      if (!res.ok) {
+        let serverMessage = `Firestore write failed (${res.status})`
+        try {
+          const errData = (await res.json()) as { error?: { message?: string } }
+          if (errData?.error?.message) {
+            serverMessage = errData.error.message
+          }
+        } catch {
+          /* ignore parse errors */
+        }
+        throw new Error(serverMessage)
+      }
+
+      setSent(true)
+      setMessage('')
+      form.reset()
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'UNKNOWN'
+      console.error('Contact submit failed:', msg)
+      if (msg.includes('PERMISSION_DENIED')) {
+        setSubmitError('Firestore rule blocked this request. Please update Firestore Rules to allow contact form creates.')
+      } else if (msg.includes('API key not valid')) {
+        setSubmitError('Firebase API key is invalid. Please verify apiKey/projectId in firebase config.')
+      } else if (msg.includes('NOT_FOUND')) {
+        setSubmitError('Firestore database not found. Create Firestore in your Firebase project first.')
+      } else {
+        setSubmitError(`Submit failed: ${msg}`)
+      }
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -187,7 +256,7 @@ export default function Contact() {
             <div>
               <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a] md:text-3xl">Send a message</h2>
               <p className="mt-2 text-sm text-[#5c5349]">
-                Client-side demo only — wire Firebase, SES, or your helpdesk API for production. Character budget prevents essays.
+                This form now stores entries in Firestore (`contacts` collection). Character budget prevents essays.
               </p>
               {sent ? (
                 <div className="mt-6 rounded-2xl border border-[#c9a227]/50 bg-[#f0ebe3] p-6 text-[#5c5349]">
@@ -286,10 +355,12 @@ export default function Contact() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full rounded-md bg-[#5c1a2a] px-4 py-3 text-sm font-semibold text-[#faf7f2] shadow-sm hover:bg-[#3d111c] md:w-auto"
+                    disabled={sending}
+                    className="w-full rounded-md bg-[#5c1a2a] px-4 py-3 text-sm font-semibold text-[#faf7f2] shadow-sm hover:bg-[#3d111c] disabled:cursor-not-allowed disabled:opacity-70 md:w-auto"
                   >
-                    Submit
+                    {sending ? 'Submitting...' : 'Submit'}
                   </button>
+                  {submitError ? <p className="text-sm font-medium text-[#9a7212]">{submitError}</p> : null}
                 </form>
               )}
             </div>

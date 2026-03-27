@@ -73,6 +73,29 @@ const dayParts = [
   },
 ]
 
+const residentialHighlights = [
+  {
+    id: 'hostel',
+    title: 'Hostel life and facilities',
+    image: campusImages.hostel,
+    points: [
+      'Separate blocks with 24x7 security desk, biometric access, and wardens on each floor.',
+      'Wi-Fi enabled study lounges, reading corners, laundry zones, and backup power in all blocks.',
+      'Weekly mentor check-ins, medical support referral desk, and late-entry safety protocol.',
+    ],
+  },
+  {
+    id: 'canteen',
+    title: 'Canteen and dining services',
+    image: campusImages.canteen,
+    points: [
+      'Multi-cuisine counters with vegetarian-first menus and clearly marked allergen information.',
+      'Extended canteen hours during exam weeks with healthy snack combos and hydration stations.',
+      'Digital token ordering, cashless payments, and hygiene audits displayed at entry points.',
+    ],
+  },
+] as const
+
 export default function CampusLife() {
   const [tab, setTab] = useState<(typeof lifeTabs)[number]['id']>('live')
 
@@ -215,6 +238,41 @@ export default function CampusLife() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      <section className="border-t border-b border-[#e2ddd4] bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+          <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a] md:text-3xl">Hostel and canteen at a glance</h2>
+          <p className="mt-2 max-w-3xl text-[#5c5349]">
+            Daily residential support and food services with student safety, convenience, and wellbeing built into operations.
+          </p>
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
+            {residentialHighlights.map((item, i) => (
+              <article key={item.id} className={`overflow-hidden rounded-2xl border shadow-sm ${getHighlightTheme(i + 2).card}`}>
+                <div
+                  className="h-48 w-full bg-cover bg-center"
+                  style={{
+                    backgroundImage: `linear-gradient(180deg, rgba(26,20,16,0.08), rgba(26,20,16,0.45)), url(${item.image})`,
+                  }}
+                  aria-label={item.title}
+                />
+                <div className="p-5">
+                  <h3 className="font-serif text-xl font-semibold text-[#1a1410]">{item.title}</h3>
+                  <ul className="mt-3 space-y-2 text-sm leading-relaxed text-[#5c5349]">
+                    {item.points.map((point) => (
+                      <li key={point} className="flex gap-2">
+                        <span className="mt-1 text-[#9a7212]" aria-hidden>
+                          ●
+                        </span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -9,6 +9,7 @@ const NAV = [
   { to: '/admissions', label: 'Admissions' },
   { to: '/placements', label: 'Placements' },
   { to: '/research', label: 'Research' },
+  { to: '/progress', label: 'Progress' },
   { to: '/events', label: 'Events' },
   { to: '/library', label: 'Library' },
   { to: '/campus-life', label: 'Campus Life' },

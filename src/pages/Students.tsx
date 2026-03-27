@@ -30,6 +30,42 @@ const resources = [
   },
 ]
 
+const studentProjects = [
+  {
+    id: 'smart-attendance',
+    title: 'Smart Attendance Analytics',
+    domain: 'AI + Web',
+    image:
+      'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=85',
+    summary: 'Face-recognition assisted attendance with absentee trend dashboards for mentors.',
+    details:
+      'Built with React dashboard components, Python inference service, and role-based reports. The system flags sudden attendance drops and sends advisor alerts.',
+    tech: 'React, Python, OpenCV, PostgreSQL',
+  },
+  {
+    id: 'solar-ev',
+    title: 'Solar EV Charging Monitor',
+    domain: 'IoT + Energy',
+    image:
+      'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=1200&q=85',
+    summary: 'Live tracking of charging sessions, solar yield, and peak-load optimization.',
+    details:
+      'Students integrated energy meters with a cloud dashboard to optimize charge windows. The pilot showed lower grid usage during midday lab hours.',
+    tech: 'ESP32, MQTT, Node.js, Charting',
+  },
+  {
+    id: 'telehealth',
+    title: 'Campus Telehealth Queue',
+    domain: 'Health Tech',
+    image:
+      'https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=1200&q=85',
+    summary: 'Token-based tele-consultation queue for campus clinic and counseling desk.',
+    details:
+      'Includes triage tagging, estimated wait times, and secure appointment notes. Reduced average waiting time by prioritizing critical cases automatically.',
+    tech: 'TypeScript, Firebase, Tailwind CSS',
+  },
+] as const
+
 const checklistStorageKey = 'kppit-student-checklist'
 
 export default function Students() {
@@ -44,6 +80,7 @@ export default function Students() {
   )
 
   const [checklist, setChecklist] = useState(defaultChecklist)
+  const [activeProjectId, setActiveProjectId] = useState<(typeof studentProjects)[number]['id']>(studentProjects[0].id)
 
   useEffect(() => {
     try {
@@ -67,6 +104,8 @@ export default function Students() {
   function toggle(id: string) {
     setChecklist((rows) => rows.map((r) => (r.id === id ? { ...r, done: !r.done } : r)))
   }
+
+  const activeProject = studentProjects.find((p) => p.id === activeProjectId) ?? studentProjects[0]
 
   const faqItems = [
     {
@@ -171,17 +210,49 @@ export default function Students() {
         <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
           <div className="grid gap-10 md:grid-cols-2 md:items-start">
             <div>
-              <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a] md:text-3xl">Fees & accounts</h2>
-              <ul className="mt-6 space-y-4 text-[#5c5349]">
-                <li className="rounded-xl border border-[#e2ddd4] bg-white p-4">
-                  <p className="font-semibold text-[#1a1410]">Semester timeline</p>
-                  <p className="mt-1 text-sm">Invoices drop on day 1 of classes; late fee after day 15 (illustrative).</p>
-                </li>
-                <li className="rounded-xl border border-[#e2ddd4] bg-white p-4">
-                  <p className="font-semibold text-[#1a1410]">Banking coordinates</p>
-                  <p className="mt-1 text-sm">Use only the official account on your fee slip; verify UTR in 24 hours.</p>
-                </li>
-              </ul>
+              <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a] md:text-3xl">Student project cards</h2>
+              <p className="mt-2 text-sm text-[#5c5349]">Click any project card to open and view full project details.</p>
+              <div className="mt-6 grid gap-3">
+                {studentProjects.map((project, i) => {
+                  const t = getHighlightTheme(i)
+                  const active = project.id === activeProjectId
+                  return (
+                    <button
+                      key={project.id}
+                      type="button"
+                      onClick={() => setActiveProjectId(project.id)}
+                      className={[
+                        `rounded-xl border p-4 text-left transition-all ${t.card}`,
+                        active ? 'ring-2 ring-[#5c1a2a]/60 shadow-md' : 'hover:-translate-y-0.5 hover:shadow-md',
+                      ].join(' ')}
+                      aria-pressed={active}
+                    >
+                      <div
+                        className="mb-3 h-28 w-full rounded-lg border border-white/60 bg-cover bg-center shadow-sm"
+                        style={{ backgroundImage: `url(${project.image})` }}
+                        aria-hidden
+                      />
+                      <p className={`text-xs font-bold uppercase tracking-wide ${t.value}`}>{project.domain}</p>
+                      <p className={`mt-1 font-serif text-lg font-semibold ${t.title}`}>{project.title}</p>
+                      <p className={`mt-1 text-sm ${t.hint}`}>{project.summary}</p>
+                    </button>
+                  )
+                })}
+              </div>
+              <article className="mt-5 rounded-2xl border border-[#e2ddd4] bg-white p-5 shadow-sm">
+                <div
+                  className="mb-4 h-44 w-full rounded-xl border border-[#e2ddd4] bg-cover bg-center"
+                  style={{ backgroundImage: `url(${activeProject.image})` }}
+                  aria-label={`${activeProject.title} preview`}
+                />
+                <p className="text-xs font-bold uppercase tracking-wide text-[#9a7212]">Project details</p>
+                <h3 className="mt-2 font-serif text-xl font-semibold text-[#5c1a2a]">{activeProject.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[#5c5349]">{activeProject.details}</p>
+                <p className="mt-3 text-sm">
+                  <span className="font-semibold text-[#1a1410]">Tech stack: </span>
+                  <span className="text-[#5c5349]">{activeProject.tech}</span>
+                </p>
+              </article>
             </div>
             <div className="rounded-2xl border border-[#e2ddd4] bg-white p-6 shadow-sm">
               <h3 className="font-serif text-xl font-semibold text-[#5c1a2a]">Start-of-term checklist</h3>

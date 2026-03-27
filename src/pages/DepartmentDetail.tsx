@@ -141,9 +141,17 @@ export default function DepartmentDetail() {
                     aria-controls={`faculty-panel-${f.id}`}
                     id={`faculty-trigger-${f.id}`}
                   >
-                    <span>
-                      <span className="block font-serif text-lg font-semibold text-[#1a1410]">{f.name}</span>
-                      <span className="text-sm text-[#5c5349]">{f.title}</span>
+                    <span className="flex items-center gap-3">
+                      <img
+                        src={f.image}
+                        alt={`${f.name} portrait`}
+                        className="h-14 w-14 rounded-full border border-[#e2ddd4] object-cover object-center"
+                        loading="lazy"
+                      />
+                      <span>
+                        <span className="block font-serif text-lg font-semibold text-[#1a1410]">{f.name}</span>
+                        <span className="text-sm text-[#5c5349]">{f.title}</span>
+                      </span>
                     </span>
                     <span className="text-xs font-semibold uppercase tracking-wide text-[#9a7212]">{open ? 'Hide' : 'Profile'}</span>
                   </button>
@@ -154,19 +162,30 @@ export default function DepartmentDetail() {
                       role="region"
                       aria-labelledby={`faculty-trigger-${f.id}`}
                     >
-                      <p className="leading-relaxed">{f.bio}</p>
-                      <p className="mt-3">
-                        <span className="font-medium text-[#1a1410]">Areas:</span> {f.areas.join(', ')}
-                      </p>
-                      <p className="mt-2">
-                        <span className="font-medium text-[#1a1410]">Email:</span>{' '}
-                        <a className="text-[#5c1a2a] underline decoration-[#c9a227] underline-offset-2" href={`mailto:${f.email}`}>
-                          {f.email}
-                        </a>
-                      </p>
-                      <p className="mt-1">
-                        <span className="font-medium text-[#1a1410]">Phone:</span> {f.phone}
-                      </p>
+                      <div className="grid gap-4 md:grid-cols-[140px_1fr] md:items-start">
+                        <img
+                          src={f.image}
+                          alt={`${f.name} faculty profile`}
+                          className="h-36 w-full rounded-xl border border-[#e2ddd4] object-cover object-center"
+                          loading="lazy"
+                        />
+                        <div>
+                          <p className="font-semibold text-[#1a1410]">{f.title}</p>
+                          <p className="mt-2 leading-relaxed">{f.bio}</p>
+                          <p className="mt-3">
+                            <span className="font-medium text-[#1a1410]">Areas:</span> {f.areas.join(', ')}
+                          </p>
+                          <p className="mt-2">
+                            <span className="font-medium text-[#1a1410]">Email:</span>{' '}
+                            <a className="text-[#5c1a2a] underline decoration-[#c9a227] underline-offset-2" href={`mailto:${f.email}`}>
+                              {f.email}
+                            </a>
+                          </p>
+                          <p className="mt-1">
+                            <span className="font-medium text-[#1a1410]">Phone:</span> {f.phone}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   ) : null}
                 </li>
@@ -179,10 +198,29 @@ export default function DepartmentDetail() {
           <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a]">Labs</h2>
           <ul className="mt-6 grid gap-4 md:grid-cols-2">
             {dept.labs.map((lab) => (
-              <li key={lab.name} className="rounded-lg border border-[#e2ddd4] bg-white p-5">
-                <h3 className="font-serif text-lg font-semibold text-[#1a1410]">{lab.name}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#5c5349]">{lab.description}</p>
-                <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-[#9a7212]">Focus: {lab.focus}</p>
+              <li key={lab.name} className="overflow-hidden rounded-xl border border-[#e2ddd4] bg-white shadow-sm">
+                <div
+                  className="h-40 w-full bg-cover bg-center"
+                  style={{
+                    backgroundImage: `linear-gradient(180deg, rgba(26,20,16,0.08), rgba(26,20,16,0.42)), url(${lab.image})`,
+                  }}
+                  aria-label={`${lab.name} image`}
+                />
+                <div className="p-5">
+                  <h3 className="font-serif text-lg font-semibold text-[#1a1410]">{lab.name}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#5c5349]">{lab.description}</p>
+                  <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-[#9a7212]">Focus: {lab.focus}</p>
+                  <ul className="mt-4 space-y-2 text-sm text-[#5c5349]">
+                    {lab.details.map((line) => (
+                      <li key={line} className="flex gap-2">
+                        <span className="mt-1 text-[#b7791f]" aria-hidden>
+                          ●
+                        </span>
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </li>
             ))}
           </ul>

@@ -14,6 +14,8 @@ import Alumni from './pages/Alumni'
 import Contact from './pages/Contact'
 import Departments from './pages/Departments'
 import DepartmentDetail from './pages/DepartmentDetail'
+import AIAssistant from './pages/AIAssistant'
+import Progress from './pages/Progress'
 
 export default function App() {
   return (
@@ -28,12 +30,14 @@ export default function App() {
           <Route path="admissions" element={<Admissions />} />
           <Route path="placements" element={<Placements />} />
           <Route path="research" element={<Research />} />
+          <Route path="progress" element={<Progress />} />
           <Route path="events" element={<Events />} />
           <Route path="library" element={<Library />} />
           <Route path="campus-life" element={<CampusLife />} />
           <Route path="students" element={<Students />} />
           <Route path="alumni" element={<Alumni />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="assistant" element={<AIAssistant />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
