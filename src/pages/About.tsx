@@ -32,24 +32,50 @@ const milestones = [
 
 const leaders = [
   {
+    id: 'chairman',
+    name: 'Mr. R. K. Pradhan',
+    role: 'Chairman',
+    image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=1000&q=80',
+    note: 'Leads long-term institutional strategy, governance, and expansion across academic clusters.',
+  },
+  {
+    id: 'ceo',
+    name: 'Ms. N. A. Rao',
+    role: 'Chief Executive Officer',
+    image: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1000&q=80',
+    note: 'Drives innovation operations, digital transformation, and enterprise partnerships.',
+  },
+  {
+    id: 'director',
     name: 'Prof. S. Venkat',
     role: 'Director',
-    initials: 'SV',
+    image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=1000&q=80',
     note: 'Sets academic priorities with faculty senate & student council.',
   },
   {
+    id: 'dean-acad',
     name: 'Dr. L. Mehra',
     role: 'Dean — Academics',
-    initials: 'LM',
+    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=80',
     note: 'Programme outcomes, IQAC rhythm, and industry board cadence.',
   },
   {
+    id: 'dean-student',
     name: 'Dr. K. Isaac',
     role: 'Dean — Student Affairs',
-    initials: 'KI',
+    image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=1000&q=80',
     note: 'Hostels, placements interface, and student support escalation.',
   },
+  {
+    id: 'registrar',
+    name: 'Dr. P. Menon',
+    role: 'Registrar',
+    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1000&q=80',
+    note: 'Oversees policy execution, compliance workflows, and student records governance.',
+  },
 ]
+
+const movingLeaders = [...leaders, ...leaders] as const
 
 export default function About() {
   return (
@@ -110,25 +136,34 @@ export default function About() {
 
         <section>
           <h2 className="font-serif text-2xl font-semibold text-[#5c1a2a] md:text-3xl">Leadership spotlight</h2>
-          <p className="mt-2 max-w-2xl text-[#5c5349]">Illustrative portraits — swap with official photography anytime.</p>
-          <ul className="mt-8 grid gap-6 md:grid-cols-3">
-            {leaders.map((l) => (
-              <li key={l.name}>
-                <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e2ddd4] bg-white shadow-sm">
-                  <div className="relative aspect-[16/10] bg-gradient-to-br from-[#5c1a2a] to-[#3d111c]">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="font-serif text-4xl font-bold text-[#c9a227]">{l.initials}</span>
+          <p className="mt-2 max-w-2xl text-[#5c5349]">Leadership cards now auto-move; hover to pause and inspect details.</p>
+          <div className="relative mt-8 overflow-hidden rounded-2xl border border-[#e2ddd4]/80 bg-white/55 p-3 shadow-sm backdrop-blur-sm">
+            <div
+              className="pointer-events-none absolute inset-y-0 left-0 z-10 w-14 bg-gradient-to-r from-white/95 to-transparent md:w-20"
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 z-10 w-14 bg-gradient-to-l from-white/95 to-transparent md:w-20"
+              aria-hidden
+            />
+            <ul className="kpp-leaders-marquee flex w-max gap-4">
+              {movingLeaders.map((l, idx) => (
+                <li key={`${l.id}-${idx}`} className="w-[280px] shrink-0">
+                  <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e2ddd4] bg-white shadow-sm">
+                    <div className="relative aspect-[16/10] overflow-hidden">
+                      <img src={l.image} alt={`${l.name}, ${l.role}`} className="h-full w-full object-cover object-center" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1a1410]/60 via-transparent to-transparent" />
                     </div>
-                  </div>
-                  <div className="flex flex-1 flex-col p-5">
-                    <h3 className="font-serif text-lg font-semibold text-[#5c1a2a]">{l.name}</h3>
-                    <p className="text-sm font-medium text-[#9a7212]">{l.role}</p>
-                    <p className="mt-3 flex-1 text-sm leading-relaxed text-[#5c5349]">{l.note}</p>
-                  </div>
-                </article>
-              </li>
-            ))}
-          </ul>
+                    <div className="flex flex-1 flex-col p-5">
+                      <h3 className="font-serif text-lg font-semibold text-[#5c1a2a]">{l.name}</h3>
+                      <p className="text-sm font-medium text-[#9a7212]">{l.role}</p>
+                      <p className="mt-3 flex-1 text-sm leading-relaxed text-[#5c5349]">{l.note}</p>
+                    </div>
+                  </article>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         <section className="rounded-2xl border border-[#e2ddd4] bg-[#5c1a2a] p-8 text-[#faf7f2] md:p-10">

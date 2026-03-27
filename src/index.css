@@ -110,6 +110,30 @@ body.theme-night .kpp-nav-link--active span {
   }
 }
 
+@keyframes kpp-leaders-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.kpp-leaders-marquee {
+  animation: kpp-leaders-marquee 42s linear infinite;
+  will-change: transform;
+}
+
+.kpp-leaders-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kpp-leaders-marquee {
+    animation: none;
+  }
+}
+
 /* Header active nav pill: visible flash + continuous moving motion */
 @keyframes kpp-nav-active-flash {
   0% {

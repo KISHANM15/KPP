@@ -17,6 +17,8 @@ const NAV = [
   { to: '/contact', label: 'Contact' },
 ] as const
 
+const logoUrl = `${import.meta.env.BASE_URL}logo-kpp.png`
+
 function navClass(isActive: boolean) {
   return [
     'rounded-md px-3 py-2 text-sm font-medium transition-colors',
@@ -64,7 +66,7 @@ export default function AppLayout() {
       <header className="sticky top-0 z-50 border-b border-[#e2ddd4] bg-[#faf7f2]/95 backdrop-blur-sm">
         <div className="flex w-full items-center justify-between gap-3 px-3 py-3 md:px-5 lg:px-6">
           <Link to="/" className="flex items-center gap-3 text-left min-w-0" onClick={() => setOpen(false)}>
-            <img src="/logo-kpp.png" alt="KPP Institute of Technology logo" width={44} height={44} className="h-11 w-auto shrink-0 object-contain" />
+            <img src={logoUrl} alt="KPP Institute of Technology logo" width={44} height={44} className="h-11 w-auto shrink-0 object-contain" />
             <span className="min-w-0 font-serif text-lg font-semibold leading-tight text-[#5c1a2a] md:text-xl">
               <span className="block truncate">KPP Institute of Technology</span>
               <span className="block font-sans text-xs font-medium uppercase tracking-wider text-[#5c5349]">KPPIT</span>
@@ -156,7 +158,7 @@ export default function AppLayout() {
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-2 md:px-6">
           <div>
             <div className="flex items-center gap-3">
-              <img src="/logo-kpp.png" alt="KPP Institute of Technology logo" width={40} height={40} className="h-10 w-auto object-contain" />
+              <img src={logoUrl} alt="KPP Institute of Technology logo" width={40} height={40} className="h-10 w-auto object-contain" />
               <p className="font-serif text-lg font-semibold text-[#5c1a2a]">KPP Institute of Technology</p>
             </div>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-[#5c5349]">
