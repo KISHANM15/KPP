@@ -1,4 +1,4 @@
-# KPP Institute of Technology (KPPIT) — demo website
+# KPP Institute of Technology (KPPIT) — demo website for Browser Battle Hackthon in BMS
 
 Single-page-application style **college site** built for a hackathon-style brief with a rich **Departments** module (list + search + full department pages), expanded institute features, and **KPPIT** branding. Visual language stays **consistent on phone and desktop**—only layout reflows.
 
